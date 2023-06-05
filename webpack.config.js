@@ -11,15 +11,16 @@ module.exports = function (env = {}) {
     console.log(env);
 
     return {
-        entry: "./index5.js",
+        mode: 'development',
+        entry: "./index6.js",
         output: {
             path: jsPath,
             filename: 'bundle.js'
         },
 
-        devServer: {
-            contentBase: publicPath
-        },
+        // devServer: {
+        //     contentBase: publicPath
+        // },
 
         plugins: [
             new HtmlWebpackPlugin()
