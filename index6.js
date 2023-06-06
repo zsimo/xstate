@@ -2,31 +2,68 @@
 
 
 const machine = {
-    initial: "idle",
+    initial: "loading",
     states: {
-        idle: {
+        loading: {
             on: {
-                FETCH: "loading"
+                LOADED: "playing"
             }
         },
-        loading: {}
+        playing: {
+            on: {
+                PAUSE: "paused"
+            }
+        },
+        paused: {
+            on: {
+                PLAY: "playing"
+            }
+        }
     }
 };
 
-function transition (state, event) {
-    const nextStatus = machine.states[state.status].on?.[event.type] ?? state.status;
+
+function transition(state = {
+    value: machine.initial
+}, event) {
+
+    const nextStateValue = machine.states[state.value].on?.[event.type];
+
+    if (!nextStateValue) {
+        return state;
+    }
 
     return {
-        status: nextStatus
+        ...state,
+        value: nextStateValue,
     };
 }
 // finite states represent behaviour
 // a behaviour is how the app is going to react based on an event
 
-const state = {
-    status: machine.initial
+
+let currentState = {
+    value: machine.initial
 };
-const event = {
-    type: "FETCH"
+
+// currentState = transition(currentState, event);
+// console.log(transition(currentState, {
+//     type: "PAUSE"
+// }))
+
+const service = {
+    send: function (event) {
+        currentState = transition(currentState, event);
+        console.log(currentState);
+    }
 };
-console.log(transition(state, event));
+
+
+service.send({
+    type: "LOADED"
+});
+service.send({
+    type: "PAUSE"
+});
+
+// 45 min
